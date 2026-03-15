@@ -1,0 +1,570 @@
+/* ============================================================
+   FONTS
+   Rajdhani — headings, labels, buttons (sharp, futuristic)
+   Inter    — body text, table content (clean, readable)
+============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+/* ============================================================
+   CSS VARIABLES
+   All colors and sizes defined here so they can be reused
+   and changed in one place across the entire stylesheet
+   CONTRAST UPGRADES APPLIED:
+   --bg-card raised to 0.09 so card surfaces are distinguishable
+   --border  raised to 0.18 so card and table edges are visible
+   --text    set to pure #ffffff for maximum body text brightness
+   --muted   raised to #a8bdd4 so secondary labels read clearly
+============================================================ */
+:root {
+  --bg:          #080c14;
+  --bg-card:     rgba(255,255,255,0.09);
+  --border:      rgba(255,255,255,0.18);
+  --border-glow: rgba(0,180,255,0.4);
+  --blue:        #00b4ff;
+  --cyan:        #00ffe7;
+  --alice:       #00d4ff;
+  --bob:         #ff7043;
+  --text:        #ffffff;
+  --muted:       #a8bdd4;
+  --gold:        #ffd700;
+  --green:       #00e676;
+  --red:         #ff5252;
+  --radius:      14px;
+}
+
+/* ============================================================
+   RESET
+   Removes default browser margin, padding, and box model
+   inconsistencies across all elements
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ============================================================
+   BODY
+   Sets the dark background, font, and page padding
+   max-width: 100% ensures it fills the full screen width
+============================================================ */
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding: 40px 60px 80px;
+  max-width: 100%;
+  margin: 0;
+}
+
+/* ============================================================
+   ANIMATED BACKGROUND GRID
+   A subtle moving grid of faint blue lines behind everything
+   Gives a "live data" feel without distracting from content
+============================================================ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,180,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,180,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridMove 20s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ============================================================
+   AMBIENT GLOW ORB
+   A large soft orange glow in the bottom-left corner
+   Slowly floats to add depth and atmosphere to the background
+============================================================ */
+body::after {
+  content: '';
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255,107,53,0.04) 0%, transparent 70%);
+  bottom: -150px;
+  left: -150px;
+  animation: orbFloat 14s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ============================================================
+   CONTENT WIDTH CENTERING
+   Keeps sections and heading centered with a max width
+   so content does not stretch too wide on large screens
+============================================================ */
+.section, h1 {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+h1 {
+  margin-bottom: 40px;
+}
+
+/* ============================================================
+   BACKGROUND ANIMATIONS
+   gridMove — scrolls the grid downward continuously
+   orbFloat — gently moves the glow orb diagonally
+============================================================ */
+@keyframes gridMove { to { transform: translateY(40px); } }
+@keyframes orbFloat { to { transform: translate(80px, -80px) scale(1.2); } }
+
+/* ============================================================
+   PAGE TITLE h1
+   Large gradient text from pure white to bright cyan
+   Fades down into view on page load
+============================================================ */
+h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(26px, 5vw, 44px);
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-align: center;
+  margin: 0 0 40px;
+  background: linear-gradient(135deg, #ffffff 0%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeDown 0.8s ease both;
+}
+
+/* ============================================================
+   SECTION CARDS
+   Each major section (chart, controls, table) sits inside
+   a glass-effect card with a visible border and blur
+   Glows blue on hover to indicate active interactivity
+============================================================ */
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  animation: fadeUp 0.6s ease both;
+}
+.section:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 30px rgba(0,180,255,0.06);
+}
+
+/* ============================================================
+   SECTION HEADINGS h2
+   Small uppercase labels with a horizontal rule extending
+   to the right — used as section dividers inside cards
+============================================================ */
+h2 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ============================================================
+   CHART CONTAINER
+   Fixed-height wrapper for the Chart.js canvas element
+   Prevents the chart from collapsing or stretching on resize
+============================================================ */
+.chart-wrapper {
+  position: relative;
+  height: 280px;
+  margin-bottom: 20px;
+}
+canvas {
+  border-radius: 8px;
+}
+
+/* ============================================================
+   WINNER TEXT WRAPPER
+   Row that holds the trophy icon and the winner name together
+   Centered horizontally, with space between the two spans
+   Fades up into view when a winner is first determined
+============================================================ */
+#winnerText {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-top: 16px;
+  min-height: 34px;
+  text-transform: uppercase;
+  animation: fadeUp 0.4s ease both;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* ============================================================
+   TROPHY ICON ANIMATION
+   The 🏆 emoji gets its own span so it animates separately
+   Three layered effects run simultaneously:
+     trophyBounce — springy vertical bounce with subtle tilt
+     trophyGlow   — drop-shadow pulses from dim to bright gold
+     trophySpin   — very slight continuous rotation wobble
+   transform-origin set to bottom so it pivots like a real cup
+============================================================ */
+#winnerText .trophy {
+  display: inline-block;
+  font-size: 28px;
+  transform-origin: bottom center;
+  animation:
+    trophyBounce 2s    ease-in-out infinite,
+    trophyGlow   2.6s  ease-in-out infinite,
+    trophySpin   4s    ease-in-out infinite;
+}
+
+/* Trophy bounces upward with a slight tilt and subtle scale */
+@keyframes trophyBounce {
+  0%,  100% { transform: translateY(0)    rotate(0deg)   scale(1);    }
+  20%        { transform: translateY(-9px) rotate(-6deg)  scale(1.14); }
+  40%        { transform: translateY(-4px) rotate(4deg)   scale(1.07); }
+  60%        { transform: translateY(-7px) rotate(-3deg)  scale(1.10); }
+  80%        { transform: translateY(-2px) rotate(2deg)   scale(1.03); }
+}
+
+/* Trophy glow pulses from a soft haze to a bright gold burst */
+@keyframes trophyGlow {
+  0%,  100% { filter: drop-shadow(0 0  4px rgba(255,224,51,0.35)); }
+  50%        { filter: drop-shadow(0 0 18px rgba(255,224,51,0.95))
+                       drop-shadow(0 0 32px rgba(255,180,0,0.55)); }
+}
+
+/* Trophy rocks side to side very gently on a slow cycle */
+@keyframes trophySpin {
+  0%,  100% { transform: rotate(0deg); }
+  25%        { transform: rotate(4deg); }
+  75%        { transform: rotate(-4deg); }
+}
+
+/* ============================================================
+   WINNER NAME SHIMMER
+   The candidate name text has a moving gold highlight sweep
+   A bright white-gold band travels left to right continuously
+   giving the impression the name is glowing and alive
+============================================================ */
+#winnerText .winner-name {
+  background: linear-gradient(
+    90deg,
+    #ffe033 0%,
+    #fff8a0 38%,
+    #ffffff 50%,
+    #ffe033 62%,
+    #ffb300 100%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerGold 2.4s linear infinite;
+}
+
+/* Gold shimmer band sweeps across the winner name left to right */
+@keyframes shimmerGold {
+  0%   { background-position: 220% center; }
+  100% { background-position:   0% center; }
+}
+
+/* ============================================================
+   LIVE BADGE
+   Small pill-shaped green badge with a pulsing dot
+   Shown above the chart to signal real-time data updates
+============================================================ */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #00ff88;
+  border: 1px solid rgba(0,255,136,0.35);
+  background: rgba(0,255,136,0.10);
+  padding: 4px 10px;
+  border-radius: 99px;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+
+/* Pulsing green dot inside the live badge */
+.live-dot {
+  width: 6px;
+  height: 6px;
+  background: #00ff88;
+  border-radius: 50%;
+  animation: livePulse 1.2s ease-in-out infinite;
+  box-shadow: 0 0 8px #00ff88;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.6); }
+}
+
+/* ============================================================
+   VOTE STAT CARDS
+   Two side-by-side cards showing each candidate's vote count
+   and percentage in real time — Alice in cyan, Bob in orange
+   Numbers are large, bright, and high contrast for readability
+============================================================ */
+.vote-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  padding: 16px 20px;
+  border-radius: 10px;
+  border: 1px solid;
+  text-align: center;
+}
+.stat-card.alice {
+  background: rgba(0,212,255,0.08);
+  border-color: rgba(0,212,255,0.30);
+}
+.stat-card.bob {
+  background: rgba(255,112,67,0.08);
+  border-color: rgba(255,112,67,0.30);
+}
+
+/* Candidate name label inside each stat card */
+.stat-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.stat-card.alice .stat-name { color: #33ddff; }
+.stat-card.bob   .stat-name { color: #ff8a65; }
+
+/* Large vote count number — explicit white for maximum visibility */
+.stat-number {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #ffffff;
+  transition: all 0.4s;
+  line-height: 1;
+}
+
+/* Percentage label below the vote count — lifted muted tone */
+.stat-percent {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  color: #b8cce0;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   ELECTION STATUS TEXT
+   Shows OPEN or CLOSED below the control buttons
+   Color is set dynamically by JS: green = open, red = closed
+============================================================ */
+#electionStatus {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 17px;
+  letter-spacing: 2px;
+  margin-top: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+/* ============================================================
+   BUTTONS
+   Base ghost style shared by all action buttons
+   Each admin button has its own accent color:
+     Open Election  → green
+     Close Election → red
+     Reset Election → gold
+============================================================ */
+button {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 5px;
+  transition: all 0.25s;
+  color: #ffffff;
+  background: rgba(255,255,255,0.08);
+}
+button:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-glow);
+  background: rgba(0,180,255,0.12);
+  box-shadow: 0 6px 20px rgba(0,180,255,0.18);
+}
+button:active { transform: scale(0.97); }
+
+/* Open Election button — green accent */
+button[onclick="openElection()"] {
+  border-color: rgba(0,255,136,0.45);
+  color: #00ff88;
+}
+button[onclick="openElection()"]:hover {
+  background: rgba(0,255,136,0.12);
+  border-color: #00ff88;
+  box-shadow: 0 6px 20px rgba(0,255,136,0.18);
+}
+
+/* Close Election button — red accent */
+button[onclick="closeElection()"] {
+  border-color: rgba(255,82,82,0.45);
+  color: #ff6b6b;
+}
+button[onclick="closeElection()"]:hover {
+  background: rgba(255,82,82,0.12);
+  border-color: #ff6b6b;
+  box-shadow: 0 6px 20px rgba(255,82,82,0.18);
+}
+
+/* Reset Election button — gold accent */
+button[onclick="resetElection()"] {
+  border-color: rgba(255,224,51,0.45);
+  color: #ffe033;
+}
+button[onclick="resetElection()"]:hover {
+  background: rgba(255,224,51,0.10);
+  border-color: #ffe033;
+  box-shadow: 0 6px 20px rgba(255,224,51,0.18);
+}
+
+/* ============================================================
+   VOTE HISTORY TABLE
+   Shows all votes cast — Vote #, Voter ID, Name, Candidate, Time
+   Header labels are uppercase and spaced for scan-readability
+   Candidate column text is colored via JS: cyan = Alice, orange = Bob
+   Each row has a subtle bottom border and brightens on hover
+============================================================ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+thead tr {
+  border-bottom: 1px solid var(--border);
+}
+
+/* Table header cells */
+th {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #b8cce0;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* Table data cells — pure white for clear number and text reading */
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  color: #ffffff;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+/* Brighten entire row background on hover for quick scanning */
+tbody tr:hover td {
+  background: rgba(255,255,255,0.05);
+}
+
+/* Remove divider from the final table row */
+tbody tr:last-child td { border-bottom: none; }
+
+/* Candidate column uses Rajdhani for bold emphasis and spacing */
+td:nth-child(4) {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* ============================================================
+   ADMIN OUTPUT
+   Confirmation message shown below buttons after admin actions
+   Examples: "Election is now OPEN" / "Election reset successfully"
+   Centered at the bottom, styled in bright cyan for visibility
+============================================================ */
+#adminOutput {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: #00ffe7;
+  margin-top: 12px;
+  min-height: 20px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  font-weight: 600;
+}
+
+/* Wrapper that centers the adminOutput block on the page */
+.output-wrapper {
+  text-align: center;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================================
+   FADE ANIMATIONS
+   fadeUp   — elements slide up and fade in on page load
+   fadeDown — page title slides down and fades in on load
+============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   Thin blue scrollbar matching the dashboard color theme
+============================================================ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,180,255,0.3); border-radius: 2px; }
+
+/* ============================================================
+   RESPONSIVE
+   On small screens: stack stat cards vertically,
+   reduce the page title font size, adjust body padding
+============================================================ */
+@media (max-width: 580px) {
+  .vote-stats { grid-template-columns: 1fr; }
+  h1 { font-size: 24px; }
+  body { padding: 24px 20px 60px; }
+}

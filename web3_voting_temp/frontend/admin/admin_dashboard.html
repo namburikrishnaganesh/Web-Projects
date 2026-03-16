@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard Voting</title>
+
+    <!-- Admin stylesheet — controls layout, colors, animations -->
+    <link rel="stylesheet" href="./admin_style.css">
+
+    <!-- Chart.js library — used to draw the live bar chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- PAGE TITLE -->
+    <h1>Admin Dashboard Voting</h1>
+
+    <!-- ================================================
+         LIVE VOTE RESULTS SECTION
+         Shows a live badge, vote count stat cards for
+         Alice and Bob, the animated bar chart, and
+         the current winner text
+         Updates automatically every 3 seconds via JS
+    ================================================ -->
+    <div class="section">
+        <h2>Live Vote Results</h2>
+
+        <!-- Live indicator badge with pulsing dot -->
+        <div class="live-badge">
+            <span class="live-dot"></span>
+            Live
+        </div>
+
+        <!-- Stat cards showing vote count and percentage for each candidate -->
+        <div class="vote-stats">
+            <div class="stat-card alice">
+                <div class="stat-name">Alice</div>
+                <div class="stat-number" id="statAliceVotes">0</div>
+                <div class="stat-percent" id="statAlicePercent">0%</div>
+            </div>
+            <div class="stat-card bob">
+                <div class="stat-name">Bob</div>
+                <div class="stat-number" id="statBobVotes">0</div>
+                <div class="stat-percent" id="statBobPercent">0%</div>
+            </div>
+        </div>
+
+        <!-- Bar chart canvas — drawn and updated by admin_logic.js -->
+        <div class="chart-wrapper">
+            <canvas id="voteChart"></canvas>
+        </div>
+
+        <!-- Winner announcement — updated by JS based on vote counts -->
+        <p id="winnerText"></p>
+    </div>
+
+    <!-- ================================================
+         ELECTION CONTROL PANEL SECTION
+         Admin buttons to open or close the election
+         When closed, voters cannot cast new votes
+         Status text shows current election state
+    ================================================ -->
+    <div class="section">
+        <h2>Election Admin Control Panel</h2>
+
+        <!-- Opens the election — allows voting -->
+        <button onclick="openElection()">Open Election</button>
+
+        <!-- Closes the election — blocks voting -->
+        <button onclick="closeElection()">Close Election</button>
+
+        <!-- Shows current status: OPEN or CLOSED -->
+        <p id="electionStatus">Status: Unknown</p>
+    </div>
+
+    <!-- ================================================
+         VOTE HISTORY SECTION
+         Table showing all votes cast so far
+         Columns: Vote #, Voter ID, Voter Name, Candidate, Time
+         Populated and refreshed every 3 seconds by JS
+    ================================================ -->
+    <div class="section">
+        <h2>Vote History</h2>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Vote #</th>
+                    <th>Voter ID</th>
+                    <th>Voter Name</th>
+                    <th>Candidate</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <!-- Rows are injected here dynamically by admin_logic.js -->
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ================================================
+         CONTROLS SECTION
+         Reset Election clears all votes from the database
+         and resets the vote ID counter back to 1
+         Registered voters are kept — no need to re-register
+    ================================================ -->
+    <div class="section">
+        <h2>Controls</h2>
+        <button onclick="resetElection()">Reset Election</button>
+    </div>
+
+    <!-- ================================================
+         ADMIN OUTPUT
+         Shows confirmation messages after admin actions
+         e.g. "Election is now OPEN", "Election reset successfully"
+    ================================================ -->
+    <div class="output-wrapper">
+        <pre id="adminOutput"></pre>
+    </div>
+
+    <!-- Admin logic JS — handles all API calls and chart updates -->
+    <script src="./admin_logic.js"></script>
+</body>
+</html>

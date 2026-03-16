@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Page title shown in browser tab -->
+    <title>Web3 Voting System</title>
+
+    <!-- Voting page stylesheet — controls all colors, layout, animations -->
+    <link rel="stylesheet" href="./voting_style.css">
+</head>
+<body>
+
+    <!-- ================================================
+         VOTER LOGIN / REGISTER SECTION
+         Voter enters their ID to log in
+         If they also enter a name, they get registered
+         The button calls loginOrRegister() in voting_logic.js
+         Status message appears below after login/register attempt
+    ================================================ -->
+    <p class="section-label">Voter Login</p>
+
+    <!-- Voter ID input — required for both login and registration -->
+    <input type="text" id="voterId" placeholder="Enter Voter ID">
+
+    <!-- Name input — only needed for first-time registration -->
+    <input type="text" id="voterName" placeholder="Enter Name (for registration)">
+
+    <!-- Triggers login or register depending on which fields are filled -->
+    <button type="button" onclick="loginOrRegister(event)">Login / Register</button>
+
+    <!-- Shows success or error message after login/register attempt -->
+    <p id="voterStatus"></p>
+
+    <!-- ================================================
+         PAGE TITLE
+         Main heading for the voting system
+    ================================================ -->
+    <h1>Secure and Transparent Voting System</h1>
+
+    <!-- ================================================
+         CANDIDATE VOTE CARDS
+         One card per candidate — Alice and Bob
+         Each card shows the candidate name and a Vote button
+         Clicking Vote calls voteCandidate() in voting_logic.js
+         class="voteBtn" is required so JS can find and
+         disable these buttons when election is closed
+    ================================================ -->
+    <div class="container">
+
+        <!-- Alice candidate card -->
+        <div class="candidate">
+            <h2>Alice</h2>
+            <button type="button" class="voteBtn" onclick="voteCandidate('Alice', event)">Vote</button>
+        </div>
+
+        <!-- Bob candidate card -->
+        <div class="candidate">
+            <h2>Bob</h2>
+            <button type="button" class="voteBtn" onclick="voteCandidate('Bob', event)">Vote</button>
+        </div>
+
+    </div>
+
+    <!-- ================================================
+         LIVE RESULTS SECTION
+         Shows real-time vote counts, percentages,
+         animated progress bars, and winner indicator
+         Updates automatically every 3 seconds via JS
+    ================================================ -->
+    <h2>Live Results</h2>
+    <div class="results">
+
+        <!-- Alice result row — vote count, percent, winner trophy -->
+        <div class="candidateResult" id="aliceBox">
+            <p>
+                Alice Votes: <span id="aliceVotes">0</span>
+                <span id="alicePercent"></span>
+                <span id="aliceWinner"></span>
+            </p>
+            <!-- Progress bar — width is set dynamically by JS -->
+            <div class="barContainer">
+                <div id="aliceBar" class="bar"></div>
+            </div>
+        </div>
+
+        <!-- Bob result row — vote count, percent, winner trophy -->
+        <div class="candidateResult" id="bobBox">
+            <p>
+                Bob Votes: <span id="bobVotes">0</span>
+                <span id="bobPercent"></span>
+                <span id="bobWinner"></span>
+            </p>
+            <!-- Progress bar — width is set dynamically by JS -->
+            <div class="barContainer">
+                <div id="bobBar" class="bar"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Manually refresh results without waiting for the 3s interval -->
+    <button type="button" onclick="loadResults()">Refresh Results</button>
+
+    <!-- ================================================
+         SYSTEM OUTPUT
+         Shows status messages to the voter such as:
+         "You have already voted"
+         "Election Closed - Voting Disabled"
+         Updated by voting_logic.js
+    ================================================ -->
+    <h2>System Output</h2>
+    <pre id="output"></pre>
+
+    <!-- Voting logic JS — handles all API calls, results, and voting -->
+    <script src="./voting_logic.js"></script>
+
+</body>
+</html>
